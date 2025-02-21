@@ -1,5 +1,7 @@
 import requests
 import os
+import json
+from datetime import datetime
 from dotenv import load_dotenv
 
 # .envファイルから環境変数を読み込む
@@ -51,8 +53,12 @@ def find_non_mutual_followers(followers, following):
 def main():
     """メイン処理"""
     if not USERNAME or not TOKEN:
-      print("エラー: GITHUB_USERNAME と GITHUB_TOKEN 環境変数を設定してください。")
-      return
+        result = {
+            "error": "GITHUB_USERNAME と GITHUB_TOKEN 環境変数を設定してください。",
+            "timestamp": datetime.now().isoformat()
+        }
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        return
 
     try:
         followers = get_users(FOLLOWERS_URL)
@@ -60,21 +66,33 @@ def main():
 
         not_followed_back, not_following_back = find_non_mutual_followers(followers, following)
         
-        print("あなたがフォローしているが、あなたをフォローしていないユーザー:")
-        for user in not_followed_back:
-            print(f"- {user}")
+        # 結果をJSON形式で構造化
+        result = {
+            "timestamp": datetime.now().isoformat(),
+            "username": USERNAME,
+            "stats": {
+                "followers_count": len(followers),
+                "following_count": len(following)
+            },
+            "not_followed_back": list(not_followed_back),
+            "not_following_back": list(not_following_back)
+        }
 
-        print("\nあなたをフォローしているが、あなたがフォローしていないユーザー:")
-        for user in not_following_back:
-            print(f"- {user}")
-
+        # JSON形式で出力
+        print(json.dumps(result, ensure_ascii=False, indent=2))
 
     except requests.exceptions.RequestException as e:
-        print(f"APIリクエストエラー: {e}")
-        if e.response:
-            print(f"詳細: {e.response.text}")
+        error_result = {
+            "error": str(e),
+            "timestamp": datetime.now().isoformat()
+        }
+        print(json.dumps(error_result, ensure_ascii=False, indent=2))
     except Exception as e:
-        print(f"予期せぬエラー: {e}")
+        error_result = {
+            "error": str(e),
+            "timestamp": datetime.now().isoformat()
+        }
+        print(json.dumps(error_result, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":
