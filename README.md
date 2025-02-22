@@ -30,11 +30,14 @@ pip install -r requirements.txt
 ```
 
 3. 環境変数の設定：
-`.env`ファイルを作成し、以下の内容を設定：
+`.env.example`ファイルを`.env`にコピーし、適切な値を設定します：
+```bash
+cp .env.example .env
 ```
-GITHUB_USERNAME=your_github_username
-GITHUB_TOKEN=your_github_token
-```
+
+そして、`.env`ファイルを編集して、以下の値を設定してください：
+- `GITHUB_USERNAME`: あなたのGitHubユーザー名
+- `GITHUB_TOKEN`: GitHubのPersonal Access Token（[トークンの作成方法](https://docs.github.com/ja/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)）
 
 ### Dockerを使用する場合
 
