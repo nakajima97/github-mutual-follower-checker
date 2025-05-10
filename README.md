@@ -59,6 +59,11 @@ docker run --env-file .env github-mutual-followers
 python main.py
 ```
 
+Makeコマンドを使うことも可能です。
+```bash
+make docker-run
+```
+
 ### 出力例
 
 ```json
